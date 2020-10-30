@@ -27,4 +27,5 @@ body {
 .three-canvas{
 	display: inline-block;
 	background-color: #400;
+	overflow: hidden;
 }
