@@ -1,7 +1,3 @@
-/* 
-THREE.js r117
-*/
-
 // UTILITY
 import Stats from './../../node_modules/three/examples/jsm/libs/stats.module.js';
 import { GUI } from './../../node_modules/three/examples/jsm/libs/dat.gui.module.js';
