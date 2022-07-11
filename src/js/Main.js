@@ -2,6 +2,7 @@
 import Stats from './../../node_modules/three/examples/jsm/libs/stats.module.js';
 import { GUI } from './../../node_modules/three/examples/jsm/libs/dat.gui.module.js';
 import { WEBGL } from './../../node_modules/three/examples/jsm/WebGL.js';
+import { Debugger } from './debugger.js';
 
 // THREE
 import * as THREE from './../../node_modules/three/build/three.module.js';
@@ -19,7 +20,7 @@ import { UnrealBloomPass } from './../../node_modules/three/examples/jsm/postpro
 const canvas = document.getElementsByClassName("three-canvas")[0];
 const parent = document.getElementsByClassName("canv-box")[0];
 
-let camera, scene, renderer, composer, controls, clock, stats, gui;
+let camera, scene, renderer, composer, controls, clock, stats, gui, debug;
 let textureLoader;
 const TEXTURES = {};
 const Lights = [];
@@ -75,6 +76,12 @@ function init(){
 	gui = new GUI();
 	// gui.add(object, property, [min], [max], [step])
 
+	debug = new Debugger();
+	debug.addLine( renderer.info.render, 'calls', 'Draw Calls' );
+	debug.addLine( renderer.info.render, 'triangles', 'Triangles' );
+	debug.addLine( renderer.info.render, 'lines', 'Lines' );
+	debug.addLine( renderer.info.render, 'points', 'Points' );
+
 	// Loaders
 	textureLoader = new THREE.TextureLoader();
 
@@ -89,10 +96,6 @@ function init(){
 	// initPostProcessing();
 
 	if( ShadowSettings.ON ) renderer.shadowMap.needsUpdate = true;
-
-	setInterval( function(){
-		console.log( renderer.info.render.calls );
-	}, 1000/2 );
 
 	animate();
 }
@@ -124,6 +127,8 @@ function createStartingMesh(){
 
 function initControls(){
 	controls = new OrbitControls( camera , canvas );
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.06;
 }
 
 function initTextures(){
@@ -176,6 +181,7 @@ function animate(){
 	// renderer.info.reset();
 
 	const delta = clock.getDelta();
+	controls.update( delta );
 
 	// composer.render();
 	renderer.render( scene, camera );
